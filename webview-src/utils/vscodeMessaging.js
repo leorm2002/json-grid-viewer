@@ -32,9 +32,13 @@ export const getVSCode = () => {
  * @param {Object} data - The JSON data to save
  */
 export const saveDocumentChanges = (data) => {
+  console.log('AAAAA:', data);
+  const jsonString = JSON.stringify(data);
+  console.log('BBBB:', jsonString);
+
   getVSCode().postMessage({
     type: 'update',
-    data
+    data: jsonString
   });
 };
 
@@ -43,10 +47,22 @@ export const saveDocumentChanges = (data) => {
  * @param {Object} data - The data to copy to clipboard
  */
 export const copyToClipboard = (data) => {
-  getVSCode().postMessage({
-    type: 'copyToClipboard',
-    data
-  });
+  try {
+    // Convert to string to avoid cloning issues
+    const jsonString = JSON.stringify(data);
+    // Send message to VS Code to copy to clipboard
+    getVSCode().postMessage({
+      type: 'copyToClipboard',
+      data: jsonString
+    });
+  } catch (error) {
+    console.error('Error copying to clipboard:', error);
+    // Inform the user something went wrong
+    getVSCode().postMessage({
+      type: 'showError',
+      message: 'Failed to copy to clipboard: ' + error.message
+    });
+  }
 };
 
 /**

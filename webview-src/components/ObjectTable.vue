@@ -32,7 +32,6 @@
               type="text" 
               v-model="newPropertyKey" 
               placeholder="Property name" 
-              @blur="finishAddingProperty"
               @keyup.enter="finishAddingProperty"
               @keyup.esc="cancelAddingProperty"
               ref="newPropInput"

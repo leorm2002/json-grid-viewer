@@ -9,7 +9,7 @@
  */
 export const createDefaultValue = (type) => {
   switch (type) {
-    case 'string': return '';
+    case 'string': return '_';
     case 'number': return 0;
     case 'boolean': return false;
     case 'object': return {};
@@ -60,7 +60,7 @@ export const createDefaultValueFromExisting = (value) => {
   if (value === null) return null;
   
   switch (typeof value) {
-    case 'string': return '';
+    case 'string': return '_';
     case 'number': return 0;
     case 'boolean': return false;
     case 'object':

@@ -29,11 +29,19 @@ class JsonGridViewer {
 					this.updateWebview()
 					break;
 				case 'update':
-					this.updateDocument(msg.data);
+					const jsonData = typeof msg.data === 'string' ? JSON.parse(msg.data) : msg.data;
+
+					this.updateDocument(jsonData);
 					break;
 				case 'copyToClipboard':
-					vscode.env.clipboard.writeText(JSON.stringify(msg.data, null, 2));
-					vscode.window.showInformationMessage('JSON copied to clipboard');
+					try {
+						// data is already stringified JSON, so we need to parse and then format it
+						const jsonData = typeof msg.data === 'string' ? JSON.parse(msg.data) : msg.data;
+						vscode.env.clipboard.writeText(JSON.stringify(jsonData, null, 2));
+						vscode.window.showInformationMessage('JSON copied to clipboard');
+					} catch (error) {
+						vscode.window.showErrorMessage(`Failed to copy to clipboard: ${error.message}`);
+					}
 					break;
 			}
     })
@@ -96,6 +104,7 @@ class JsonGridViewer {
     const edit = new vscode.WorkspaceEdit();
     
     // Create a JSON string with the updated data
+
     const formatted = JSON.stringify(jsonData, null, 2);
     
     // Replace the entire document content

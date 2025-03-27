@@ -1,6 +1,6 @@
 # JSON Grid Editor
 
-This extension allows you to get a better overview and edit the content of a JSON file by showing it in a resizable grid.
+Improved version of dutchigor:json-grid-viewer this extension allows you to get a view and edit the content of a JSON file by showing it in a resizable grid.
 
 ## Features
 - Interactive JSON editing capabilities
@@ -19,7 +19,7 @@ To open a JSON file in the grid editor, right click the file, select *Open With.
 
 ### Editing Features
 - **Edit values**: Double-click on any primitive value (string, number, boolean, null) to edit it inline
-- **Add object properties**: Click the + button next to an object or use the "Add property" button when object is expanded
+- **Add object properties**: Use the "Add property" button when object is expanded
 - **Add array items**: Click the + button next to an array or use the "Add item" button when array is expanded
 - **Remove properties/items**: Click the × button next to properties or array indices
 - **Rename object properties**: Double-click on any property key to rename it
@@ -28,5 +28,12 @@ To open a JSON file in the grid editor, right click the file, select *Open With.
 
 All changes are automatically saved to the file.
 
-## To do:
-- Take colours from the active theme
+## Build Extension
+
+```
+npm install
+npm run build
+npm run vscode:prepublish
+vsce package
+```
+ 

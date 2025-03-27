@@ -4,9 +4,6 @@
       <span class="array collapsed">
         <span class="array badge">Array[{{ element.length }}]</span>
         <span class="expand" @click="toggleExpanded">{{ expanded ? '-' : '+' }}</span>
-        <span class="actions">
-          <button class="action-btn add-btn" @click="addArrayItem" title="Add item">+</button>
-        </span>
       </span>
       <array-table v-if="expanded" :array="element" @update:element="updateValue" />
     </template>
@@ -14,9 +11,6 @@
       <span class="object collapsed">
         <span class="object badge">Object[{{ Object.keys(element).length}}]</span>
         <span class="expand" @click="toggleExpanded">{{ expanded ? '-' : '+' }}</span>
-        <span class="actions">
-          <button class="action-btn add-btn" @click="addObjectProperty" title="Add property">+</button>
-        </span>
       </span>
       <object-table v-if="expanded" :member="element" @update:member="updateValue" />
     </template>
@@ -40,18 +34,7 @@
           @keyup.esc="cancelEdit"
           ref="editInput"
         />
-        <select 
-          v-else-if="typeof element === 'boolean'" 
-          v-model="editValue" 
-          @blur="saveEdit" 
-          @change="saveEdit"
-          ref="editInput"
-        >
-          <option :value="true">true</option>
-          <option :value="false">false</option>
-        </select>
-        <select 
-          v-else-if="element === null" 
+      <select v-else-if="element === null"
           v-model="editValue" 
           @blur="saveEdit"
           @change="saveEdit"
@@ -64,7 +47,32 @@
           <option value="object">object</option>
           <option value="array">array</option>
         </select>
+        <select 
+          v-else-if="typeof element === 'boolean'" 
+          v-model="editValue" 
+          @blur="saveEdit" 
+          @change="saveEdit"
+          ref="editInput"
+        >
+          <option :value="true">true</option>
+          <option :value="false">false</option>
+        </select>
       </span>
+    </template>
+    <template v-else-if="element === null">
+      <select 
+          v-model="editValue" 
+          @blur="saveEdit"
+          @change="saveEdit"
+          ref="editInput"
+        >
+          <option :value="null">null</option>
+          <option value="string">string</option>
+          <option value="number">number</option>
+          <option value="boolean">boolean</option>
+          <option value="object">object</option>
+          <option value="array">array</option>
+        </select>
     </template>
     <template v-else>
       <span 
@@ -78,7 +86,7 @@
 </template>
 
 <script>
-import { getValueType, createArrayItem, createDefaultValue } from '../utils/jsonUtils';
+import { getValueType, createDefaultValue } from '../utils/jsonUtils';
 
 export default {
   props: [
@@ -89,15 +97,25 @@ export default {
   data() {
     return {
       expanded: false,
-      isEditing: false,
+      isEditing: this.element === null,
       editValue: null,
-      originalValue: null
+      originalValue: null,
     }
   },
   computed: {
     displayValue() {
-      if (this.element === null) return 'null';
-      return this.element;
+      console.log('displayValue', this.element);
+      if (this.element === null) {
+        console.log('displayValue null');
+        return 'null';
+      }else if(this.element === ""){
+        console.log('displayValue empty string');
+        return 'BLANK';
+      }
+      else{
+        console.log('displayValue not null');
+        return this.element;
+      }
     },
     valueTypeClass() {
       return getValueType(this.element);
@@ -135,32 +153,6 @@ export default {
     },
     updateValue(newValue) {
       this.$emit('update:element', newValue);
-    },
-    addArrayItem() {
-      if (!Array.isArray(this.element)) return;
-      
-      // Expand array if it's not already expanded
-      if (!this.expanded) {
-        this.expanded = true;
-      }
-      
-      // Add appropriate default value based on array contents
-      const newItem = createArrayItem(this.element);
-      const newArray = [...this.element, newItem];
-      this.$emit('update:element', newArray);
-    },
-    addObjectProperty() {
-      if (typeof this.element !== 'object' || this.element === null) return;
-      
-      // Expand object if it's not already expanded
-      if (!this.expanded) {
-        this.expanded = true;
-      }
-      
-      this.$nextTick(() => {
-        // Use event bus to notify object table to add a new property
-        this.$root.$emit('add-object-property', this.element);
-      });
     }
   },
   created() {
