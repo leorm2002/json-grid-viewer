@@ -1,27 +1,32 @@
 {
-  "name": "json-viewer",
-  "publisher": "DutchIgor",
-  "displayName": "JSON Grid Viewer",
-  "description": "Get a better overview of the content in a JSON file by viewing it in an resizable grid.",
+  "name": "improved-json-viewer",
+  "publisher": "Leonardo Naddei",
+  "displayName": "JSON Grid Editor",
+  "description": "Edit JSON files with a powerful grid interface. Easily modify values, add properties, create nested objects and arrays with a user-friendly grid view.",
   "icon": "icon.png",
   "galleryBanner": {
     "color": "#d4e1ef",
     "theme": "light"
   },
-  "version": "0.1.0",
-  "repository": "github:dutchigor/json-grid-viewer",
+  "version": "0.0.1",
+  "repository": "github:leorm2002/json-grid-viewer",
   "engines": {
     "vscode": "^1.46.0"
   },
   "categories": [
-    "Visualization"
+    "Visualization",
+    "Other"
   ],
   "keywords": [
     "json",
-    "drilldown",
-    "hierarchy",
+    "editor",
     "grid",
-    "overview"
+    "table",
+    "edit",
+    "modify",
+    "structure",
+    "visual",
+    "tree"
   ],
   "qna": "https://github.com/dutchigor/json-grid-viewer/discussions",
   "main": "./editor/main.js",
@@ -44,7 +49,7 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "lint": "vue-cli-service lint",
     "vscode:prepublish": "npm run build"
   },

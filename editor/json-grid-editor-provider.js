@@ -17,7 +17,7 @@ class JsonGridEditorProvider {
 
 	async resolveCustomTextEditor(document, webviewPanel, _token) {
 		// Initialise viewer
-		const jsonGridViewer = new JsonGridViewer(document, webviewPanel, this.context)
+		let jsonGridViewer = new JsonGridViewer(document, webviewPanel, this.context)
 
 		// Make sure we clean up when our editor is closed.
 		webviewPanel.onDidDispose(() => {

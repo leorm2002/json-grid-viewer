@@ -28,9 +28,15 @@ class JsonGridViewer {
 				case 'ready':
 					this.updateWebview()
 					break;
+				case 'update':
+					this.updateDocument(msg.data);
+					break;
+				case 'copyToClipboard':
+					vscode.env.clipboard.writeText(JSON.stringify(msg.data, null, 2));
+					vscode.window.showInformationMessage('JSON copied to clipboard');
+					break;
 			}
     })
-
   }
 
 	getHtmlForWebview() {
@@ -56,7 +62,8 @@ class JsonGridViewer {
 				<meta http-equiv="Content-Security-Policy"
 					content="default-src 'none';
 					style-src ${this.webviewPanel.webview.cspSource};
-					script-src 'nonce-${nonce}';"
+					script-src 'nonce-${nonce}';
+					"
 				/>
 				<title>JSON Grid viewer</title>
 				<link href="${appCssUri}" rel="stylesheet">
@@ -82,6 +89,24 @@ class JsonGridViewer {
 			type: 'update',
 			doc
 		})
+  }
+  
+  // Update the document with new JSON data from the webview
+  updateDocument(jsonData) {
+    const edit = new vscode.WorkspaceEdit();
+    
+    // Create a JSON string with the updated data
+    const formatted = JSON.stringify(jsonData, null, 2);
+    
+    // Replace the entire document content
+    edit.replace(
+      this.document.uri,
+      new vscode.Range(0, 0, this.document.lineCount, 0),
+      formatted
+    );
+    
+    // Apply the edit
+    return vscode.workspace.applyEdit(edit);
   }
   
   // remove any listeners
